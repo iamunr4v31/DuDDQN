@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-from DQNAgent import Agent
+from DuDQNAgent import Agent
 from utils import plot_learning_curve
 from preprocess import make_env
 import wandb
@@ -8,16 +8,16 @@ import torch.nn as nn
 
 if __name__ == "__main__":
     env = make_env("PongNoFrameskip-v4")
-    wandb.init(project="pong-dqn")
+    wandb.init(project="pong-dudqn")
     best_score = -np.inf
     load_checkpoint = False
-    n_games = 500
-    agent = Agent(gamma=0.99, epsilon=0.1, lr= 0.0001, 
+    n_games = 300
+    agent = Agent(gamma=0.99, epsilon=1.0, lr= 0.0001, 
                 input_dims=env.observation_space.shape, n_actions=env.action_space.n,
                 memory_size=30000, eps_min=0.1, decay_rate=1e-5, batch_size=32,
-                replace=1000, checkpoint_dir='models/', algo="DQNAgent", env_name="PongNoFrameskip-v4")
+                replace=1000, checkpoint_dir='models/', algo="DuDQNAgent", env_name="PongNoFrameskip-v4")
     wandb.config = agent.__dict__
-    agent.load_models()             # comment after training
+    # agent.load_models()             # comment after training
     
     if load_checkpoint:
         agent.load_models()
