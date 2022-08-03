@@ -12,12 +12,12 @@ if __name__ == "__main__":
     best_score = -np.inf
     load_checkpoint = False
     n_games = 300
-    agent = Agent(gamma=0.99, epsilon=1.0, lr= 0.0001, 
+    agent = Agent(gamma=0.99, epsilon=0.1, lr= 0.0001, 
                 input_dims=env.observation_space.shape, n_actions=env.action_space.n,
                 memory_size=30000, eps_min=0.1, decay_rate=1e-5, batch_size=32,
-                replace=1000, checkpoint_dir='models/', algo="DuDQNAgent", env_name="PongNoFrameskip-v4")
+                replace=1000, checkpoint_dir='models', algo="DuDQNAgent", env_name="PongNoFrameskip-v4")
     wandb.config = agent.__dict__
-    # agent.load_models()             # comment after training
+    agent.load_models()             # comment after training
     
     if load_checkpoint:
         agent.load_models()
@@ -50,9 +50,10 @@ if __name__ == "__main__":
 
         avg_score = np.mean(scores[-100:])
         if np.mean(scores[-100:]) >= np.mean(scores[-101:-1]):
-            best_score = score
             if not load_checkpoint:
                 agent.save_models()
+        if score > best_score:
+            best_score = score
         
 
         sys.stdout.write(f"Game: {i}/{n_games} | Score: {score:.2f} | Average Score: {avg_score:.2f} | Best Score: {best_score} | Epsilon: {agent.epsilon:.2f} | steps: {n_steps}\n")

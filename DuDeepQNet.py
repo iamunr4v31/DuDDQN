@@ -11,7 +11,7 @@ class DuDQN(nn.Module):
     def __init__(self, lr: float, n_actions: int, name: str,
                 input_dims: Iterable[int], checkpoint_dir: str) -> None:
         super().__init__()
-        self.checkpoint_dir = checkpoint_dir
+        self.checkpoint_dir = os.path.join(os.path.dirname(__file__), checkpoint_dir)
         self.checkpoint_file = os.path.join(self.checkpoint_dir, name)
 
         self.conv1 = nn.Conv2d(input_dims[0], 32, 8, stride=4)
